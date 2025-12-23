@@ -1,8 +1,8 @@
-# 🎮 Gamepad Browser Controller
+ 🎮 Gamepad Browser Controller
 
 Control any website with your gamepad! Navigate, scroll, control media, and interact with web pages using your Xbox, PlayStation, or any standard game controller.
 
-## ✨ Features
+ ✨ Features
 
 - 🎥 **Universal Media Control** - Play/pause, volume, seek on YouTube, Netflix, Twitch, and more
 - 🖱️ **Mouse Cursor Control** - Use right joystick as a mouse, click with R3
@@ -11,7 +11,7 @@ Control any website with your gamepad! Navigate, scroll, control media, and inte
 - ⚡ **Instant Response** - Low latency gamepad input
 - 🌐 **Works Everywhere** - Compatible with any website
 
-## 🎮 Default Controls
+ 🎮 Default Controls
 
 | Button | Action |
 |--------|--------|
@@ -30,9 +30,9 @@ Control any website with your gamepad! Navigate, scroll, control media, and inte
 | **R3 (Right Click)** | Mouse Click |
 | **L3 (Left Click)** | Right Click |
 
-## 📦 Installation
+📦 Installation
 
-### From Source (Current Method)
+
 
 1. **Download or Clone** this repository
    ```bash
@@ -121,7 +121,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 ## 💬 Support
 
 Having issues? 
-- Open an [Issue](https://github.com/YOUR-USERNAME/gamepad-browser-controller/issues)
+- Open an [Issue](https://github.com/12somyasahu/gamepad-browser-controller/issues)
 - Check existing issues for solutions
 
 ## 🙏 Acknowledgments
@@ -129,5 +129,6 @@ Having issues?
 Built with ❤️ for the gaming and streaming community.
 
 ---
+
 
 **Enjoy controlling the web with your gamepad!** 🎮✨
