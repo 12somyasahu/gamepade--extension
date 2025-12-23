@@ -104,7 +104,7 @@ Contributions are welcome! Feel free to:
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR-USERNAME/gamepad-browser-controller.git
+git clone https://github.com/122somyasahu/gamepad-extension.git
 
 # Make your changes to the files
 
@@ -121,7 +121,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 ## 💬 Support
 
 Having issues? 
-- Open an [Issue](https://github.com/12somyasahu/gamepad-browser-controller/issues)
+- Open an [Issue](https://github.com/12somyasahu/gamepad-extension/issues)
 - Check existing issues for solutions
 
 ## 🙏 Acknowledgments
@@ -132,3 +132,4 @@ Built with ❤️ for the gaming and streaming community.
 
 
 **Enjoy controlling the web with your gamepad!** 🎮✨
+
