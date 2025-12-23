@@ -7,7 +7,8 @@ let isEnabled = true;
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 let cursorSpeed = 15;
-
+let currentPlaybackSpeed = 1.0; // Track current video speed
+const triggerDeadzone = 0.1; // Ignore tiny trigger movements
 // Button mapping - can be customized
 const buttonMap = {
   0: 'playPause',      // A/Cross
@@ -251,6 +252,35 @@ function showNotification(text) {
     setTimeout(() => notification.remove(), 300);
   }, 1500);
 }
+// Smoothly adjust video playback speed based on trigger pressure
+function adjustPlaybackSpeed(leftTrigger, rightTrigger) {
+  const media = findMediaElement();
+  if (!media) return; // No video found, do nothing
+  
+  let targetSpeed = 1.0; // Default normal speed
+  
+  // Right trigger speeds up (1.0x to 2.0x)
+  if (rightTrigger > triggerDeadzone) {
+    targetSpeed = 1.0 + (rightTrigger * 1.0); // 0% = 1.0x, 100% = 2.0x
+  }
+  
+  // Left trigger slows down (0.25x to 1.0x)
+  // Only if right trigger isn't being used
+  if (leftTrigger > triggerDeadzone && rightTrigger <= triggerDeadzone) {
+    targetSpeed = 1.0 - (leftTrigger * 0.75); // 0% = 1.0x, 100% = 0.25x
+  }
+  
+  // Only update if speed actually changed significantly
+  if (Math.abs(targetSpeed - currentPlaybackSpeed) > 0.05) {
+    currentPlaybackSpeed = targetSpeed;
+    media.playbackRate = targetSpeed;
+    
+    // Show notification occasionally (not every frame, too spammy)
+    if (Math.random() < 0.05) { // 5% chance = smooth occasional updates
+      showNotification(`⚡ Speed: ${targetSpeed.toFixed(2)}x`);
+    }
+  }
+}
 
 // Add CSS animations
 const style = document.createElement('style');
@@ -305,7 +335,12 @@ function pollGamepad() {
       
       lastButtonStates[index] = isPressed;
     });
+    // Read trigger values (most controllers use buttons 6 and 7)
+    const leftTrigger = gamepad.buttons[6] ? gamepad.buttons[6].value : 0;
+    const rightTrigger = gamepad.buttons[7] ? gamepad.buttons[7].value : 0;
     
+    // Adjust playback speed based on triggers
+    adjustPlaybackSpeed(leftTrigger, rightTrigger);
     // Handle analog sticks for scrolling
     const leftStickY = gamepad.axes[1]; // Left stick vertical
     const rightStickX = gamepad.axes[2]; // Right stick horizontal
@@ -343,4 +378,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Start polling
 console.log('Gamepad Browser Controller loaded');
+
 pollGamepad();
