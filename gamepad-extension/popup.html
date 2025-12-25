@@ -3,67 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
-      width: 350px;
+      width: 360px;
       padding: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      margin: 0;
+      font-family: -apple-system, system-ui, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
     
     h1 {
       font-size: 20px;
-      margin: 0 0 15px 0;
+      margin-bottom: 15px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     
     .status {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
+      background: rgba(255,255,255,0.15);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
       backdrop-filter: blur(10px);
-    }
-    
-    .status.connected {
-      background: rgba(76, 175, 80, 0.3);
-      border: 2px solid #4CAF50;
-    }
-    
-    .status.disconnected {
-      background: rgba(244, 67, 54, 0.3);
-      border: 2px solid #f44336;
-    }
-    
-    .button-map {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-    
-    .button-map h3 {
-      margin: 0 0 10px 0;
-      font-size: 16px;
-    }
-    
-    .button-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 14px;
     }
     
-    .button-item:last-child {
-      border-bottom: none;
+    .status.on {
+      background: rgba(76,175,80,0.3);
+      border: 2px solid #4CAF50;
     }
     
-    .button-name {
+    .status.off {
+      background: rgba(244,67,54,0.3);
+      border: 2px solid #f44336;
+    }
+    
+    .ctrl-name {
+      font-size: 11px;
       opacity: 0.8;
+      margin-top: 4px;
     }
     
     button {
@@ -71,43 +51,111 @@
       padding: 12px;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       margin-bottom: 10px;
     }
     
-    .toggle-btn {
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .btn-toggle {
       background: #4CAF50;
       color: white;
     }
     
-    .toggle-btn:hover {
-      background: #45a049;
-      transform: translateY(-2px);
-    }
-    
-    .toggle-btn.disabled {
+    .btn-toggle.off {
       background: #f44336;
     }
     
-    .toggle-btn.disabled:hover {
-      background: #da190b;
+    .btn-secondary {
+      background: #FF9800;
+      color: white;
     }
     
-    .info {
-      background: rgba(255, 255, 255, 0.1);
+    .panel {
+      background: rgba(0,0,0,0.2);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    
+    .panel.show { display: block; }
+    
+    .panel h3 {
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .remap-list {
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    
+    .remap-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 13px;
+    }
+    
+    .remap-item:last-child { border: none; }
+    
+    select {
+      background: rgba(0,0,0,0.3);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px;
+      border-radius: 5px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    .btn-group button {
+      flex: 1;
+      padding: 10px;
+      font-size: 13px;
+    }
+    
+    .map-list {
+      background: rgba(255,255,255,0.1);
       padding: 12px;
       border-radius: 8px;
-      font-size: 12px;
-      line-height: 1.5;
+      max-height: 320px;
+      overflow-y: auto;
     }
     
-    .controller-name {
-      font-size: 12px;
-      opacity: 0.9;
-      margin-top: 5px;
+    .map-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+    }
+    
+    .map-item:last-child { border: none; }
+    
+    .map-btn { opacity: 0.7; }
+    
+    .info {
+      background: rgba(255,255,255,0.1);
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -118,85 +166,45 @@
   </h1>
   
   <div class="status" id="status">
-    <div id="status-text">Checking for gamepad...</div>
-    <div class="controller-name" id="controller-name"></div>
+    <div id="statusText">Checking gamepad...</div>
+    <div class="ctrl-name" id="ctrlName"></div>
   </div>
   
-  <button class="toggle-btn" id="toggleBtn">Enable Gamepad</button>
+  <button class="btn-toggle" id="btnToggle">Disable</button>
+  <button class="btn-secondary" id="btnCustomize">⚙️ Customize Controls</button>
   
-  <div class="button-map">
-    <h3>📋 Button Mapping</h3>
-    <div class="button-item">
-      <span class="button-name">A / Cross</span>
-      <span>Play/Pause</span>
+  <div class="panel" id="panelCustomize">
+    <h3>Remap Buttons</h3>
+    <div class="remap-list" id="remapList"></div>
+    <div class="btn-group">
+      <button style="background: #4CAF50;" id="btnSave">💾 Save</button>
+      <button style="background: #f44336;" id="btnReset">🔄 Reset</button>
     </div>
-    <div class="button-item">
-      <span class="button-name">B / Circle</span>
-      <span>Go Back</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">X / Square</span>
-      <span>Mute/Unmute</span>
-    </div>
-   <div class="button-item">
-      <span class="button-name">Y / Triangle</span>
-      <span>Fullscreen</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">D-Pad Up</span>
-      <span>Volume Up</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">D-Pad Down</span>
-      <span>Volume Down</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">D-Pad Left</span>
-      <span>Rewind 10s</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">D-Pad Right</span>
-      <span>Forward 10s</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">LB</span>
-      <span>Previous</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">RB</span>
-      <span>Next</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">Left Trigger (LT)</span>
-      <span>Slow Motion (0.25x - 1x)</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">Right Trigger (RT)</span>
-      <span>Speed Up (1x - 2x)</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">Left Stick</span>
-      <span>Scroll Page</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">Right Stick</span>
-      <span>Move Cursor</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">L3 (Left Stick Click)</span>
-      <span>Left Click</span>
-    </div>
-    <div class="button-item">
-      <span class="button-name">R3 (Right Stick Click)</span>
-      <span>Right Click</span>
-    </div>
+  </div>
+  
+  <div class="map-list">
+    <div class="map-item"><span class="map-btn">A / Cross</span><span>Play/Pause</span></div>
+    <div class="map-item"><span class="map-btn">B / Circle</span><span>Go Back</span></div>
+    <div class="map-item"><span class="map-btn">X / Square</span><span>Mute</span></div>
+    <div class="map-item"><span class="map-btn">Y / Triangle</span><span>Fullscreen</span></div>
+    <div class="map-item"><span class="map-btn">LB</span><span>Previous</span></div>
+    <div class="map-item"><span class="map-btn">RB</span><span>Next</span></div>
+    <div class="map-item"><span class="map-btn">LT</span><span>Slow (0.25x-1x)</span></div>
+    <div class="map-item"><span class="map-btn">RT</span><span>Fast (1x-2x)</span></div>
+    <div class="map-item"><span class="map-btn">L3</span><span>Left Click</span></div>
+    <div class="map-item"><span class="map-btn">R3</span><span>Right Click</span></div>
+    <div class="map-item"><span class="map-btn">D-Up</span><span>Vol+</span></div>
+    <div class="map-item"><span class="map-btn">D-Down</span><span>Vol-</span></div>
+    <div class="map-item"><span class="map-btn">D-Left</span><span>-10s</span></div>
+    <div class="map-item"><span class="map-btn">D-Right</span><span>+10s</span></div>
+    <div class="map-item"><span class="map-btn">Left Stick</span><span>Scroll</span></div>
+    <div class="map-item"><span class="map-btn">Right Stick</span><span>Cursor</span></div>
+  </div>
   
   <div class="info">
-    💡 Connect a gamepad and press any button to start. Works on YouTube, Netflix, Twitch, and any site with video/audio!
+    💡 Works on YouTube, Netflix, Twitch, and all video sites. L3/R3 click to interact with any element!
   </div>
   
   <script src="popup.js"></script>
 </body>
-
 </html>
-
