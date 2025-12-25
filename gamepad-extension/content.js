@@ -12,17 +12,17 @@ const triggerDeadzone = 0.1; // Ignore tiny trigger movements
 // Button mapping - can be customized
 const buttonMap = {
   0: 'playPause',      // A/Cross
-  1: 'fullscreen',     // B/Circle
+  1: 'goBack',     // B/Circle
   2: 'mute',           // X/Square
-  3: 'skipForward',    // Y/Triangle
+  3: 'fullscreen',     // Y/Triangle
   12: 'volumeUp',      // D-Pad Up
   13: 'volumeDown',    // D-Pad Down
   14: 'rewind',        // D-Pad Left
   15: 'forward',       // D-Pad Right
   4: 'previousVideo',  // LB
   5: 'nextVideo',      // RB
-  11: 'mouseClick',    // R3 (Right stick click)
-  10: 'rightClick',    // L3 (Left stick click) - bonus right click
+11: 'rightClick',    // R3 (Right stick click) - right click
+  10: 'leftClick',     // L3 (Left stick click) - left click
 };
 
 // Create custom cursor
@@ -158,7 +158,11 @@ function executeAction(action) {
         showNotification('⏭ +30s');
       }
       break;
-      
+      case 'goBack':
+      // Go back in browser history
+      window.history.back();
+      showNotification('⬅️ Back');
+      break;
     case 'fullscreen':
       if (media) {
         if (!document.fullscreenElement) {
@@ -210,13 +214,15 @@ function executeAction(action) {
       }
       break;
       
-    case 'mouseClick':
-      simulateClick(false);
+    case 'leftClick':
+      simulateClick(false); // false = left click
       break;
       
     case 'rightClick':
-      simulateClick(true);
+      simulateClick(true); // true = right click
       break;
+      
+    
   }
 }
 
@@ -380,3 +386,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 console.log('Gamepad Browser Controller loaded');
 
 pollGamepad();
+
