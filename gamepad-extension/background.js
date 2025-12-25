@@ -1,20 +1,17 @@
-// Background service worker for the extension
-// Handles installation and basic setup
+// Lightweight background service worker
+// Just handles installation and default settings
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Gamepad Browser Controller installed');
+  console.log('Gamepad Controller v2.0 installed');
   
-  // Set default settings
-  chrome.storage.local.set({
-    enabled: true,
-    scrollSpeed: 30
+  // Set defaults only if not already set
+  chrome.storage.local.get(['enabled', 'customMap'], (result) => {
+    const defaults = {};
+    if (result.enabled === undefined) defaults.enabled = true;
+    if (result.customMap === undefined) defaults.customMap = {};
+    
+    if (Object.keys(defaults).length > 0) {
+      chrome.storage.local.set(defaults);
+    }
   });
-});
-
-// Listen for messages from content scripts
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'log') {
-    console.log('[Gamepad Controller]', request.message);
-  }
-  return true;
 });
